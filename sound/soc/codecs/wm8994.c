@@ -62,6 +62,10 @@
 #define HDMI_USE_AUDIO
 #endif
 
+#ifdef CONFIG_SND_VOODOO
+#include "wm8994_voodoo.h"
+#endif
+
 /* WM8994 AUDIO POWER CONTROL */
 static struct wm8994_priv *localwm8994; //hdlnc_bp_ysyim
 int call_state(void); //hdlnc_bp_ysyim
@@ -238,6 +242,10 @@ int wm8994_write(struct snd_soc_codec *codec, unsigned int reg, unsigned int val
 	u8 data[4];
 	int ret;
 	//BUG_ON(reg > WM8993_MAX_REGISTER);
+
+#ifdef CONFIG_SND_VOODOO
+	value = voodoo_hook_wm8994_write(codec, reg, value);
+#endif
 
 	/* data is
 	 *   D15..D9 WM8993 register offset
@@ -2170,6 +2178,11 @@ static int wm8994_i2c_probe(struct i2c_client *i2c,
 	ret = wm8994_init(wm8994_priv);
 	if (ret < 0)
 		dev_err(&i2c->dev, "failed to initialize WM8994\n");
+
+#ifdef CONFIG_SND_VOODOO
+	voodoo_hook_wm8994_pcm_probe(codec);
+#endif
+
 	return ret;
 }
 

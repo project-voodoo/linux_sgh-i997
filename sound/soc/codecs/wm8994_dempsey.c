@@ -24,6 +24,9 @@
 #include "A1026_dev.h"  //hdlnc_ldj_0415_A1026
 #include "A1026_i2c_drv.h"  //hdlnc_ldj_0415_A1026
 
+#ifdef CONFIG_SND_VOODOO
+#include "wm8994_voodoo.h"
+#endif
 
 
 //------------------------------------------------
@@ -1426,6 +1429,10 @@ void wm8994_record_main_mic(struct snd_soc_codec *codec)
 	wm8994_write(codec, WM8994_AIF1_MASTER_SLAVE, val);
 
 	wm8994_write( codec, WM8994_GPIO_1, 0xA101 );   // GPIO1 is Input Enable
+
+#ifdef CONFIG_SND_VOODOO_RECORD_PRESETS
+	voodoo_hook_record_main_mic();
+#endif
 	
 	if(wm8994->recognition_active == REC_ON)	// for avoiding pop noise when start google voice search
 		msleep(60);

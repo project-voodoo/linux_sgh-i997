@@ -40,6 +40,9 @@ snd-soc-wm8988-objs := wm8988.o
 snd-soc-wm8990-objs := wm8990.o
 snd-soc-wm8993-objs := wm8993.o
 
+ifeq ($(CONFIG_SND_VOODOO),y)
+snd-soc-wm8994-objs := wm8994.o wm8994_dempsey.o A1026_i2c_drv.o ttymisc.o audience.o wm8994_voodoo.o
+else
 ifeq ($(CONFIG_S5PC110_DEMPSEY_BOARD),y)
 snd-soc-wm8994-objs := wm8994.o wm8994_dempsey.o A1026_i2c_drv.o ttymisc.o audience.o
 else
@@ -53,6 +56,7 @@ ifeq ($(CONFIG_S5PC110_VIBRANTPLUS_BOARD),y)
 snd-soc-wm8994-objs := wm8994.o wm8994_vibrantplus.o HAC.o  ttymisc.o
 else
 snd-soc-wm8994-objs := wm8994.o wm8994_aries.o HAC.o
+endif
 endif
 endif
 endif
@@ -116,3 +120,7 @@ obj-$(CONFIG_SND_SOC_WM_HUBS)	+= snd-soc-wm-hubs.o
 
 # Amp
 obj-$(CONFIG_SND_SOC_MAX9877)	+= snd-soc-max9877.o
+
+ifeq ($(CONFIG_SND_VOODOO_MODULE),m)
+obj-$(CONFIG_SND_VOODOO_MODULE)	+= voodoo-sound-tegrak-module/
+endif
